@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pisa"
+description = "Python SSH Infrastructure for Scalable Applications (PISA)"
+authors = [
+	{ name="Michael Hohenstein", email="michael@hohenste.in" },
+]
+readme = "README.md"
+requires-python= ">=3.9"
+keywords = ["data", "analysis", "education", "university", "students", "physics"]
+
+license = {text = "MIT"}
+classifiers = [
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Education",
+        "Intended Audience :: Science/Research",
+        "Topic :: Education",
+        "Topic :: Scientific/Engineering",
+        "Topic :: Scientific/Engineering :: Physics",
+        "Topic :: Scientific/Engineering :: Information Analysis",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    # currently no dependencies
+]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "pisa.__version__"}
+
+[project.optional-dependencies]
+# TODO: Update???
+dev = [
+    #"coverage",
+    #"sphinx",
+    #"sphinx-rtd-theme",
+    #"mock",
+    #"pytest",
+    #"flake8",
+    #"black",
+    #"isort",
+    "build",
+    "twine", 
+]
+
+[project.urls]
+"Homepage" = "https://github.com/MitchiLaser/pisa/docs/README.md"
+"Repository" = "https://github.com/MitchiLaser/pisa"
+
+#[project.scripts]
+#kafe2go = "kafe2.fit.tools.kafe2go:kafe2go" # TODO: Update for pisa dispatcher
+
+########## TODO ???? ##############
+
+#[tool.pytest.ini_options]
+#testpaths = "kafe2/test"
+#python_files = "test*.py"
+
+#[tool.coverage.run]
+#source = [
+	#"kafe2",
+#]
+#omit = [
+	#"kafe2/test/*",
+#]
+#command_line= '-m unittest discover -v -s kafe2/test -p "*.py"'
+
+[tool.black]
+line-length = 150
+
+[tool.isort]
+profile = "black"
+
