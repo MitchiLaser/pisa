@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pisa"
+name = "pisa-ssh"
 description = "Python SSH Infrastructure for Scalable Applications (PISA)"
 authors = [
 	{ name="Michael Hohenstein", email="michael@hohenste.in" },
@@ -51,7 +51,7 @@ dev = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/MitchiLaser/pisa/docs/README.md"
+"Homepage" = "https://github.com/MitchiLaser/pisa/blob/main/docs/README.md" # TODO: Maybe provide github pages build and HTML page
 "Repository" = "https://github.com/MitchiLaser/pisa"
 
 #[project.scripts]

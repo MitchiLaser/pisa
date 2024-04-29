@@ -21,10 +21,10 @@ build: devenv
 clean:
 	rm -rf build/
 	rm -rf dist/
-	rm -rf kafe2.egg-info/
+	rm -rf pisa-ssh.egg-info/
 	rm -rf venv/
 	rm -rf `find . -type d -name __pycache__`
-	cd doc && $(MAKE) clean
+	#cd doc && $(MAKE) clean
 	rm -f test-*.yml
 
 devenv:
