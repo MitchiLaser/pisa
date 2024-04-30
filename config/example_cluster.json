@@ -1,0 +1,9 @@
+{
+	"all": {
+		"num_tasks": 1
+	},
+	"devices": [
+		"testdevice.local",
+		"testdevice2.local"
+	]
+}
