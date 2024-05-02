@@ -21,7 +21,7 @@ build: devenv
 clean:
 	rm -rf build/
 	rm -rf dist/
-	rm -rf pisa_ssh.egg-info/
+	rm -rf src/pisa_ssh.egg-info/
 	rm -rf venv/
 	rm -rf `find . -type d -name __pycache__`
 	#cd doc && $(MAKE) clean

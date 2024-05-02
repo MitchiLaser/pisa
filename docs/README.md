@@ -1,5 +1,5 @@
 # pisa
-Python SSH Infrastructure for Scalable Applications (PISA)
+Pseudo Infrastructure for Scalable Applications (PISA)
 
 PISA was designed to run only on the computing pool at the physics faculty at KIT. There are currently no plans to make PISA run on any other platform.
 

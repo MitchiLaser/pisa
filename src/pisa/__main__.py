@@ -16,7 +16,7 @@ def main():
     # set up argument parser
     parser = argparse.ArgumentParser(
         prog="PISA",
-        description="Python SSH Infrastructure for Scalable Applications (PISA)"
+        description="Pseudo Infrastructure for Scalable Applications (PISA)"
     )
     parser.add_argument("-v", "--version", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("-c", "--cluster", required=True, help="cluster configuration file")

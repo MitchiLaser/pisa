@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pisa-ssh"
-description = "Python SSH Infrastructure for Scalable Applications (PISA)"
+description = "Pseudo Infrastructure for Scalable Applications (PISA)"
 authors = [
 	{ name="Michael Hohenstein", email="michael@hohenste.in" },
 ]
