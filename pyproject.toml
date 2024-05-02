@@ -9,7 +9,7 @@ authors = [
 	{ name="Michael Hohenstein", email="michael@hohenste.in" },
 ]
 readme = "README.md"
-requires-python= ">=3.9"
+requires-python= ">=3.11"
 keywords = ["data", "analysis", "education", "university", "students", "physics"]
 
 license = {text = "MIT"}
@@ -22,8 +22,6 @@ classifiers = [
         "Topic :: Scientific/Engineering :: Physics",
         "Topic :: Scientific/Engineering :: Information Analysis",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
 ]
@@ -54,8 +52,8 @@ dev = [
 "Homepage" = "https://github.com/MitchiLaser/pisa/blob/main/docs/README.md" # TODO: Maybe provide github pages build and HTML page
 "Repository" = "https://github.com/MitchiLaser/pisa"
 
-#[project.scripts]
-#kafe2go = "kafe2.fit.tools.kafe2go:kafe2go" # TODO: Update for pisa dispatcher
+[project.scripts]
+pisa = "pisa.__main__:main"
 
 ########## TODO ???? ##############
 

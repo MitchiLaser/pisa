@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from .metadata import __version__
+from .config import __version__
+from .dispatcher import dispatcher
 import argparse
-import json
 import logging as log
 import sys
 
@@ -21,30 +21,31 @@ def main():
     parser.add_argument("-v", "--version", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("-c", "--cluster", required=True, help="cluster configuration file")
     parser.add_argument("-t", "--task", required=True, help="task configuration file")
-    parser.add_argument("-d", "--debug", action="store_true", help="enable debug mode which prints the application logs to the console")
+    parser.add_argument("-l", "--log", action="store_true", help="enable debug log printing to the console")
+    parser.add_argument("-d", "--dry-run", action="store_true", help="do not run anything, only show which tasks would be run")
     args = parser.parse_args()
 
     # set up log
-    log.basicConfig(level=log.DEBUG if args.debug else log.WARNING)
+    log.basicConfig(level=log.DEBUG if args.log else log.WARNING)
     log.debug(f"Cluster configuration file: {args.cluster}")
     log.debug(f"Task configuration file: {args.task}")
 
     # open and read cluster configuration file
-    try:
-        with open(args.cluster, "r", encoding=sys.getfilesystemencoding()) as f:
-            cluster = json.load(f)
-            # check if user accidentally has no device in the list
-            if len(cluster['devices']) == 0:
-                log.error("No devices listed in cluster configuration file")
-                sys.exit(1)
-            # some debugging print statements
-            log.debug(f"Global task limit: {cluster['all']['num_tasks']} task(s) on every machine")
-            log.debug(f"List of available devices: {', '.join(cluster['devices'])}")
-            # TODO: continue after config file was parsed
-    except Exception as e:
-        log.error(f"Failed to read cluster configuration file: {args.cluster}")
-        log.error(e)
-        sys.exit(1)
+    cluster = dispatcher.cluster_conf.parse_file(args.cluster)
+    tasks = dispatcher.task_list.parse_file(args.task)
+
+    # in case of a dry run: print all tasks and exit
+    if args.dry_run:
+        while (not tasks.empty()):
+            task = tasks.get()
+            print(task)
+        sys.exit(0)
+
+    # start the cluster dispatcher
+    dispatcher.run_dispatcher(
+        cluster=cluster,
+        tasks=tasks
+    )
 
 
 if __name__ == "__main__":

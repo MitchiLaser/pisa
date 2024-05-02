@@ -1,1 +1,1 @@
-from .metadata import __version__
+from .config import __version__

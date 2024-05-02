@@ -1,0 +1,11 @@
+woking_directory = "~/project_directory/"                       # working directory of the running process
+environment = "venv/"                                           # activate virtual environment relative to working directory
+output = "output/"                                              # redirect stdout of all processes \ 
+log = "log/"                                                    # redirect log of the pisa wrapper |- into files in a directory relative to working directory
+error = "error/"                                                # redirect stderr of all processes /
+executable = "program_1.sh"                                     # executable file relative to working directory
+fix_arguments = "-f important_data.txt -p 123 -d"               # Arguments which are always the same for every run
+var_arguments = [                                               # list of arguments which are varied for every run
+        {"arg"="--range", "start"=0, "end"=10, "step"=1},       # arg -> command line argument, start and end -> range of values, step -> step size
+        #{"arg"="--range2", "start"=0, "end"=10, "step"=1},       # just for testing purposes
+]
