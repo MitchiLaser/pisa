@@ -1,8 +1,8 @@
 woking_directory = "~/project_directory/"                       # working directory of the running process
 environment = "venv/"                                           # activate virtual environment relative to working directory
-output = "output/"                                              # redirect stdout of all processes \ 
-log = "log/"                                                    # redirect log of the pisa wrapper |- into files in a directory relative to working directory
-error = "error/"                                                # redirect stderr of all processes /
+output = "output/"                                              # redirect stdout of all processes | 
+error = "error/"                                                # redirect stderr of all processes \- into files in a directory relative to working directory
+assign = "assignments.csv"                                      # file containing the assignments for the runs with their numbers
 executable = "program_1.sh"                                     # executable file relative to working directory
 fix_arguments = "-f important_data.txt -p 123 -d"               # Arguments which are always the same for every run
 var_arguments = [                                               # list of arguments which are varied for every run

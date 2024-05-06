@@ -5,7 +5,7 @@ task_necessary_keys = {
     "woking_directory",
     "environment",
     "output",
-    "log",
+    "assign",
     "error",
     "executable",
     "var_arguments"
