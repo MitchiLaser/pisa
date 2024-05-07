@@ -69,45 +69,44 @@ def fill_queue(task_queue: queue.Queue, config: dict, add_args: list[running_var
             fill_queue(task_queue, config, add_args[1:], f"{current_args} {add_args[0].arg_name} {i}", assignto)
 
 
-def parse_file(config_file: str) -> task:
+def parse_file(config_file: str) -> queue.Queue[task]:
     try:
         with open(config_file, "rb") as f:
             config = tomllib.load(f)
-
-            # check if all important keys are present
-            if not task_necessary_keys.issubset(config.keys()):
-                log.error(f"Missing keys in task description file: {', '.join(task_necessary_keys - config.keys())}")
-                sys.exit(1)
-            # check if the list of variable arguments is present and not empty
-            if ('var_arguments' not in config) or (len(config['var_arguments']) == 0):
-                log.error("No variable arguments provided")
-                sys.exit(1)
-            # warn the user about unrecognized keys
-            if (config.keys() - task_necessary_keys - task_optional_keys != set()):
-                log.warning(f"Unknown keys in task description file: {', '.join(config.keys() - task_necessary_keys - task_optional_keys)}")
-
-            # open assignment file
-            try:
-                with open(config['assign'], "w+") as assignto:
-                    # now fill a queue with all tasks which have to be executed
-                    fill_queue(
-                        tasks := queue.Queue(),
-                        config,
-                        [
-                            running_var(i['arg'], i['start'], i['end'], i['step']) for i in config['var_arguments']
-                        ],  # the list of running variables
-                        config['fix_arguments'],  # start with fixed arguments
-                        assignto
-                    )
-            except Exception as e:
-                log.error(f"Failed to open assignment file: {config['assign']}")
-                log.error(e)
-                sys.exit(1)
-
-            log.info(f"Added {tasks.qsize()} tasks to the queue")
-            # queue should contain all the tasks with fixed arguments and all the possible combinations of the variable arguments
-            return tasks
     except Exception as e:
         log.error(f"Failed to read task file: {config_file}")
         log.error(e)
         sys.exit(1)
+
+    # check if all important keys are present
+    if not task_necessary_keys.issubset(config.keys()):
+        log.error(f"Missing keys in task description file: {', '.join(task_necessary_keys - config.keys())}")
+        sys.exit(1)
+    # check if the list of variable arguments is present and not empty
+    if ('var_arguments' not in config) or (len(config['var_arguments']) == 0):
+        log.error("No variable arguments provided")
+        sys.exit(1)
+    # warn the user about unrecognized keys
+    if (config.keys() - task_necessary_keys - task_optional_keys != set()):
+        log.warning(f"Unknown keys in task description file: {', '.join(config.keys() - task_necessary_keys - task_optional_keys)}")
+    # open assignment file
+    try:
+        with open(config['assign'], "w+") as assignto:
+            # now fill a queue with all tasks which have to be executed
+            fill_queue(
+                tasks := queue.Queue(),
+                config,
+                [
+                    running_var(i['arg'], i['start'], i['end'], i['step']) for i in config['var_arguments']
+                ],  # the list of running variables
+                config['fix_arguments'],  # start with fixed arguments
+                assignto
+            )
+    except Exception as e:
+        log.error(f"Failed to write assignment file: {config['assign']}")
+        log.error(e)
+        sys.exit(1)
+
+    log.info(f"Added {tasks.qsize()} tasks to the queue")
+    # queue should contain all the tasks with fixed arguments and all the possible combinations of the variable arguments
+    return tasks

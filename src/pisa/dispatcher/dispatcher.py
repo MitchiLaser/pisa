@@ -26,8 +26,8 @@ def node_connection(node: cluster_conf.cluster_conf.node_conf, tasks: queue.Queu
         try:
             # get a task from the queue
             task = tasks.get(block=False)
-            log.debug(f"Task {task.num} starting on node {node.get_address()}: {task.exe} {' '.join(task.args)}")
             has_task = True
+            log.debug(f"Task {task.num} starting on node {node.get_address()}: {task.exe} {' '.join(task.args)}")
 
             # call ssh
             # TODO
