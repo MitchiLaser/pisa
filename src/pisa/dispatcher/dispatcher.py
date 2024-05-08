@@ -36,7 +36,7 @@ def node_connection(node: cluster_conf.cluster_conf.node_conf, tasks: queue.Queu
                 .send_command(f"./{task.env}/bin/activate") \
                 .send_command(f"mkdir -p {task.out}") \
                 .send_command(f"mkdir -p {task.err}") \
-                .send_command(f"{task.cmd} >{task.out}/{task.num}.out 2>{task.err}/{task.num}.err &") \
+                .send_command(f"{task.cmd} >{task.out}/{task.num}.out 2>{task.err}/{task.num}.err") \
                 .close()
             # log.debug(f"{task.cmd} >{task.out}/{task.num}.out 2>{task.err}/{task.num}.err &")  # TODO: remove
         except queue.Empty:  # queue is empty: exit thread
