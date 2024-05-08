@@ -3,9 +3,9 @@ environment = "venv"                                    # activate virtual envir
 output = "output"                                       # redirect stdout of all processes | 
 error = "error"                                         # redirect stderr of all processes \- into files in a directory relative to working directory
 assign = "assignments.csv"                              # file containing the assignments for the runs with their numbers
-executable = "sleep"                            # executable file relative to working directory
+executable = "python fib.py"                            # executable file relative to working directory
 fix_arguments = ""                                      # Arguments which are always the same for every run
 var_arguments = [                                       # list of arguments which are varied for every run
-        {"arg"="", "start"=0, "end"=31, "step"=1},    # arg -> command line argument, start and end -> range of values, step -> step size
+        {"arg"="-n", "start"=0, "end"=41, "step"=1},    # arg -> command line argument, start and end -> range of values, step -> step size
         #{"arg"="-p", "start"=0, "end"=10, "step"=1},    # just as an example
 ]
