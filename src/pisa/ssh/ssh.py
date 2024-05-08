@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import fcntl
 import os
 import subprocess
 
@@ -19,13 +18,9 @@ class Session:
             stderr=subprocess.PIPE,
         )
 
-        # weird hack to transform stdout and stderr into other fds where reading is non blocking
-        # first get the file descriptors of the pipes
-        # then use the fcntl system call to change the file descriptor flags
-        stdout_fd = self.ssh_process.stdout.fileno()
-        stderr_fd = self.ssh_process.stderr.fileno()
-        fcntl.fcntl(stdout_fd, fcntl.F_SETFL, os.O_NONBLOCK)
-        fcntl.fcntl(stderr_fd, fcntl.F_SETFL, os.O_NONBLOCK)
+        # set stdout and stderr to non blocking read mode
+        os.set_blocking(self.ssh_process.stdout.fileno(), False)
+        os.set_blocking(self.ssh_process.stderr.fileno(), False)
 
         return self  # monadic return
 
@@ -41,17 +36,11 @@ class Session:
 
     def read_stdout(self):
         self._check_connected()
-        try:
-            return self.ssh_process.stdout.read1().decode('utf-8')
-        except BlockingIOError:
-            return None
+        return self.ssh_process.stdout.read1().decode('utf-8')
 
     def read_stderr(self):
         self._check_connected()
-        try:
-            return self.ssh_process.stderr.read1().decode('utf-8')
-        except BlockingIOError:
-            return None
+        return self.ssh_process.stderr.read1().decode('utf-8')
 
     def wait(self):
         self._check_connected()

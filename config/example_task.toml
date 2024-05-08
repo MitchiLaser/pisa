@@ -1,7 +1,6 @@
 woking_directory = "~"                                  # working directory of the running process
 environment = "venv"                                    # activate virtual environment relative to working directory
-output = "output"                                       # redirect stdout of all processes | 
-error = "error"                                         # redirect stderr of all processes \- into files in a directory relative to working directory
+output = "fib_run"                                       # redirect stdout and stderr of all processes into files, relative to working directory
 assign = "assignments.csv"                              # file containing the assignments for the runs with their numbers
 executable = "python fib.py"                            # executable file relative to working directory
 fix_arguments = ""                                      # Arguments which are always the same for every run

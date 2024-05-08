@@ -55,8 +55,8 @@ def fill_queue(task_queue: queue.Queue, config: dict, add_args: list[running_var
             args=current_args,  # the shlex.split() function transforms a string containing a collection of arguments into a list of single arguments
             w_dir=config['woking_directory'],
             env=config['environment'],
-            out=config['output'],
-            err=config['error'],
+            out=f"{config['output']}/stdout",
+            err=f"{config['output']}/stderr",
         ))
         # write the task with its parameters and the corresponding number into the assignment file
         assignto.write(f"{num}, {config['executable']} {current_args}\n")
