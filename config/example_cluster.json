@@ -1,9 +1,10 @@
 {
 	"all": {
-		"num_tasks": 1
+		"num_tasks": 3
 	},
 	"devices": [
-		"testdevice.local",
-		"testdevice2.local"
+		"fphct05",
+		"fphct06",
+		"fphct07"
 	]
 }
