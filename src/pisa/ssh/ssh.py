@@ -39,7 +39,6 @@ class Session:
                 self.ssh_process.stdin.flush()
             except BrokenPipeError:
                 pass
-            # self.send_command("exit")
             self.wait()
 
     def __del__(self):

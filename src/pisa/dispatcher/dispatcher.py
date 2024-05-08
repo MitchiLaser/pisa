@@ -9,8 +9,6 @@ import queue
 import subprocess
 import sys
 
-import random  # TODO: remove
-
 
 def run_dispatcher(cluster: cluster_conf.cluster_conf, tasks: queue.Queue[task_list.task]):
     # Start a thread for each connection to every device (task_limit for each node). Then these start taking tasks from the queue.
