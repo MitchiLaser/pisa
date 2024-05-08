@@ -3,7 +3,6 @@
 from ..config import task_necessary_keys, task_optional_keys
 import logging as log
 import queue
-import shlex
 import sys
 import tomllib
 import typing
@@ -12,15 +11,14 @@ import typing
 class task:
     def __init__(self, num: int, exe: str, args: str, w_dir: str, env: str, out: str, err: str):
         self.num = num
-        self.exe = exe
-        self.args = args
+        self.cmd = str(exe) + str(args)
         self.w_dir = w_dir
         self.env = env
         self.out = out
         self.err = err
 
     def __repr__(self):  # print the tasks in case of a dry run
-        return f"Task {self.num}: {self.exe} {self.args}; WDIR={self.w_dir}; ENV={self.env}; OUT={self.out}; ERR={self.err}"
+        return f"Task {self.num}: {self.cmd}; WDIR={self.w_dir}; ENV={self.env}; OUT={self.out}; ERR={self.err}"
 
 
 class enumerator:
@@ -54,7 +52,7 @@ def fill_queue(task_queue: queue.Queue, config: dict, add_args: list[running_var
         task_queue.put(task(
             num=num,
             exe=config['executable'],
-            args=shlex.split(current_args),  # the shlex.split() function transforms a string containing a collection of arguments into a list of single arguments
+            args=current_args,  # the shlex.split() function transforms a string containing a collection of arguments into a list of single arguments
             w_dir=config['woking_directory'],
             env=config['environment'],
             out=config['output'],

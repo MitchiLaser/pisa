@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
-from .import cluster_conf
-from .import task_list
+from . import cluster_conf
+from ..ssh import ssh
+from . import task_list
 import threading
 import logging as log
 import queue
 import subprocess
 import sys
+
+import random  # TODO: remove
 
 
 def run_dispatcher(cluster: cluster_conf.cluster_conf, tasks: queue.Queue[task_list.task]):
@@ -27,10 +30,17 @@ def node_connection(node: cluster_conf.cluster_conf.node_conf, tasks: queue.Queu
             # get a task from the queue
             task = tasks.get(block=False)
             has_task = True
-            log.debug(f"Task {task.num} starting on node {node.get_address()}: {task.exe} {' '.join(task.args)}")
+            log.debug(f"Task {task.num} starting on node {node.get_address()}: {task.cmd}")
 
-            # call ssh
-            # TODO
+            ssh.Session(node.get_address()) \
+                .connect() \
+                .send_command(f"cd {task.w_dir}") \
+                .send_command(f"./{task.env}/bin/activate") \
+                .send_command(f"mkdir -p {task.out}") \
+                .send_command(f"mkdir -p {task.err}") \
+                .send_command(f"{task.cmd} >{task.out}/{task.num}.out 2>{task.err}/{task.num}.err &") \
+                .close()
+            # log.debug(f"{task.cmd} >{task.out}/{task.num}.out 2>{task.err}/{task.num}.err &")  # TODO: remove
         except queue.Empty:  # queue is empty: exit thread
             has_task = False
             break
@@ -45,8 +55,8 @@ def node_connection(node: cluster_conf.cluster_conf.node_conf, tasks: queue.Queu
                 tasks.put(task)  # reinsert task back into the queue
                 break
             else:
-                log.error(f"Executing command {task.num} failed: {task.exe} {' '.join(task.args)}")
+                log.error(f"Executing command {task.num} failed: {task.cmd}")
         else:
-            log.debug(f"Task {task.num} finished on node {node.get_address()}: {task.exe} {' '.join(task.args)}")
+            log.debug(f"Task {task.num} finished on node {node.get_address()}: {task.cmd}")
         finally:
             tasks.task_done() if has_task else None  # task from the queue always needs to be marked as done
