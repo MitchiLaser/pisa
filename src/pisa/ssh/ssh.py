@@ -34,6 +34,14 @@ class Session:
         self.ssh_process.stdin.flush()
         return self  # monadic return
 
+    def send_command_list(self, cmd_list: list):
+        self._check_connected()
+        for command in cmd_list:
+            self.send_command(command)
+            # self.ssh_process.stdin.write(f"{command}\n".encode('utf-8'))
+            # self.ssh_process.stdin.flush()
+        return self  # monadic return
+
     def read_stdout(self):
         self._check_connected()
         return self.ssh_process.stdout.read1().decode('utf-8')
@@ -42,7 +50,7 @@ class Session:
         self._check_connected()
         return self.ssh_process.stderr.read1().decode('utf-8')
 
-    def wait(self):
+    def wait_for_exit(self):
         self._check_connected()
         self.ssh_process.wait()
         return self  # monadic return
@@ -54,7 +62,7 @@ class Session:
                 self.ssh_process.stdin.flush()
             except BrokenPipeError:
                 pass
-            self.wait()
+            self.wait_for_exit()
 
     def __del__(self):
         self.close()

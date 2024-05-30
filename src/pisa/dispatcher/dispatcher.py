@@ -30,14 +30,13 @@ def node_connection(node: cluster_conf.cluster_conf.node_conf, tasks: queue.Queu
             has_task = True
             log.debug(f"Task {task.num} starting on node {node.get_address()}: {task.cmd}")
 
-            ssh.Session(node.get_address()) \
-                .connect() \
-                .send_command(f"cd {task.w_dir}") \
-                .send_command(f"./{task.env}/bin/activate") \
-                .send_command(f"mkdir -p {task.out}") \
-                .send_command(f"mkdir -p {task.err}") \
-                .send_command(f"nice -n 19 {task.cmd} >{task.out}/{task.num}.out 2>{task.err}/{task.num}.err") \
-                .close()
+            ssh.Session(node.get_address()).connect().send_command_list([
+                f"cd {task.w_dir}",
+                f"./{task.env}/bin/activate",
+                f"mkdir -p {task.out}",
+                f"mkdir -p {task.err}",
+                f"nice -n 19 {task.cmd} >{task.out}/{task.num}.out 2>{task.err}/{task.num}.err"
+            ]).close()
             # log.debug(f"{task.cmd} >{task.out}/{task.num}.out 2>{task.err}/{task.num}.err &")  # TODO: remove
         except queue.Empty:  # queue is empty: exit thread
             has_task = False
