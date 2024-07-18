@@ -3,6 +3,10 @@
 		"num_tasks": 3
 	},
 	"devices": [
+		"fphct01",
+		"fphct02",
+		"fphct03",
+		"fphct04",
 		"fphct05",
 		"fphct06",
 		"fphct07",
