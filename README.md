@@ -1,8 +1,21 @@
 # pisa
+
 Pseudo Infrastructure for Scalable Applications (PISA)
 
-PISA is a simple but powerful program that allows to combine the computational power of multiple computers and turn them into a batch system using only the SSH access. It is designed to be simple and therefore only runs on a some machines from the computer pool of the physics department at KIT. It is not designed to be a general purpose batch system and is only maintained for this environment. Furthermore it is not designed to be used by many users at the same time because there is no limit provided for the allocated resources (our estimation is that only one person at the time will be using it). The large benefit of PISA is that it runs completely within the userspace and requires neither root access or higher privileges for installation nor to run the program.
+PISA is a Batch-System for Python programs that uses only SSH access to the remote machines and executes Python programs. It was developed for the computer pool of the physics department at KIT but can also be used in other environments. PISA expects the computer system to be homogeneous, meaning that the user home directories are mounted via NFS and the same on all machines. Furthermore it is not designed to be used by many users at the same time because there is no limit provided for the allocated resources (our estimation is that only one person at the time will be using it). The large benefit of PISA is that it runs completely within the userspace and requires neither root access or higher privileges for installation nor to run the program.
 
-PISA connects to all the available machines using SSH. This only works when the authentication via an SSH key was set up before. Otherwise the connection cannot be established. Furthermore it requires the working directory (usually the home directory of all the users) to be the same on all machines. This is usual for our environment because the user home directories are mounted via NFS. To run a program on multiple machines a cluster configuration file and a task configuration file are required. An example for both can be seen in the [config](./config) directory. This directory also contains the example program for the provided task configuration. It is a good benchmark because all the tasks take a different time to run. The configuration file contains a virtual environment because you always need one!
+## Installation
 
-Now you know everything to use it. If there are any questions or problems feel free to create an issue.
+```bash
+pip install pisa-ssh
+```
+
+## Usage
+
+Take a look into the [Documentation-Website](https://mitchilaser.github.io/pisa/) for more information.
+
+Short summary: PISA has a cluster configuration file (JSON, containing a list of all SSH addresses) and a task configuration file (toml). An example for both can be seen in the [config](./config) directory. This directory also contains the example program for the provided task configuration. It is a good benchmark because all the tasks take a different time to run. To run the program you have to create a virtual environment first that is sourced on the remote machines. Before you can submit jobs, the SSH keys have to be set up for passwordless login.
+
+## Development
+
+PISA was intentionally developed for the computing pool at the physics faculty at KIT but can be extended to other environments. I am happy to receive feedback (or issues) and contributions (pull-requests).
