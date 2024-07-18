@@ -1,0 +1,213 @@
+/* global variables */
+:root{
+    --dark-gray: #2e3436;
+    --green: #4e9a06;
+    --violet: #8a0699;
+    --emphasis-color: #8D3528;
+    /*--violet: #8D3528;*/
+    /*--emphasis-color: #8a0699;*/
+    --main-background: #e5e5f7;
+    --em-color: var(--green);
+
+    --main-max-width: 1000px;
+}
+
+/* general settings */
+a,
+a:link,
+a:visited{
+    text-decoration: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-decoration-color: inherit;
+}
+a:hover,
+a:active{
+    text-decoration: underline;
+}
+
+p{
+    line-height: 1.6;
+    margin: 20px 5%;
+}
+p:not(.codeblock) code,
+li code{
+    color: var(--violet);
+    padding: 1px 5px;
+    border: solid 1px #78909c;
+}
+p.codeblock code{
+    display: inline-block;
+    padding: 1rem;
+    border: dashed 2px var(--violet);
+}
+p.shellcode code::before{
+    content: "$ ";
+}
+
+em{
+    font-family: monospace;
+    color: var(--em-color);
+    background: inherit;
+    text-decoration-color: var(--em-color);
+    border-radius: 0.5rem;
+    font-size: inherit;
+    font-style: unset;
+    font-weight: bold;
+}
+
+/* document structure */
+html,
+body{
+    margin: 0;
+    border: none;
+    padding: 0;
+    font-family: sans-serif;
+    min-width: 680px;
+    height: 100vh;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    font-size: 1rem;
+    background-color: var(--main-background);
+    /* TODO: Maybe find another background pattern */
+    background:
+        linear-gradient(var(--main-background) 4px, transparent 0),
+        linear-gradient(45deg, transparent 74px, transparent 75px, var(--dark-gray) 75px, var(--dark-gray) 76px, transparent 77px, transparent 109px),
+        linear-gradient(-45deg, transparent 75px, transparent 76px, var(--dark-gray) 76px, var(--dark-gray) 77px, transparent 78px, transparent 109px),
+        var(--main-background);
+    background-size: 100% 6px, 109px 109px, 109px 109px;
+    background-position: 54px 55px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+}
+body > *{
+    flex: 0 0 auto;
+    display: block;
+    padding: 10px 5%;
+    font-family: sans-serif;
+}
+
+/* Header */
+header{
+    font-family: monospace;
+    font-size: 1.6rem;
+    background-color: var(--dark-gray);
+    color: #fff;
+    padding: 2% 5%;
+}
+header h1{
+    color: #fff;
+}
+header h1 em{
+    color: var(--green);
+}
+header p {
+    margin: auto 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    box-sizing: border-box;
+    max-width: var(--main-max-width);
+}
+
+/* Footer */
+footer{
+    font-family: monospace;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: var(--dark-gray);
+    color: #fff;
+    font-size: 1.1rem;
+    padding-bottom: 0;
+}
+footer p{
+    margin: 10px;
+    vertical-align: middle;
+}
+footer p:first-child{
+    margin-left: 0;
+}
+footer p:last-child{
+    margin-right: 0;
+}
+
+/* center the logo */
+footer p:first-child{
+    display: flex;
+    flex-direction: row;
+}
+
+/* main content */
+main{
+    flex: 1 1 auto;
+    font-family: sans-serif;
+    max-width: var(--main-max-width);
+    background-color: var(--main-background);
+    padding: 0 0.5%;
+    margin: 0 4.5%;
+}
+main h1{
+    color: var(--dark-gray);
+    border-top: solid 5px var(--green);
+    border-radius: 0.7rem;
+    padding: 0.7rem 1.5rem 0 1.5rem;
+    font-size: 2rem;
+}
+main h2{
+    color: var(--violet);
+    margin-left: 5%;
+    margin-right: 5%;
+}
+main h1 em,
+main h2 em{
+    background-color: inherit;
+    color: var(--green);
+}
+
+main ul{
+    display: block;
+    list-style-type: none;
+    margin: 0 5%;
+    padding: 0;
+    font-size: 1.2rem;
+}
+main li{
+    margin: 0.9rem 3%;
+    list-style-position: inside;
+}
+main li::marker{
+    content: "→ ";
+    color: var(--dark-gray);
+}
+
+main article ul{
+    margin: 0 5%;
+    font-size: inherit;
+}
+
+/* exclude table of content from link definitions */
+main > *:not(nav) a,
+main > *:not(nav) a:link,
+main > *:not(nav) a:visited{
+    /*color: inherit;*/
+    /*text-decoration: underline var(--emphasis-color);*/
+    color: var(--emphasis-color);
+    font-weight: bold;
+}
+
+/* break-point for smartphones */
+@media (max-width: 1100px){
+    body{
+        background-image: none;
+    }
+}
+@media (max-width: 730px){
+    footer{
+        flex-direction: column;
+    }
+    footer > p{
+        margin: 10px 0;
+    }
+}

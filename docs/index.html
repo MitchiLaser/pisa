@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8" />
+        <title>PISA Poolraum</title>
+        <meta name="viewport" content="initial-scale=2, maximum-scale=1">
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg" sizes="any">
+        <link rel="stylesheet" type="text/css" href="style.css" />
+        <script src="script.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>/ <em>PISA</em></h1>
+            <p>Pseudo Infrastructure for Scaleable Applications</p>
+        </header>
+        <main>
+
+            <nav>
+                <h1>Table of content</h1>
+                <ul>
+                    <li><a href="#introduction">What is <em>PISA</em>?</a></li>
+                    <li><a href="#prerequsites">Prerequisites</a></li>
+                    <li><a href="#howto">How to use <em>PISA</em>?</a></li>
+                    <li><a href="#example">Example program</a></li>
+                    <li><a href="#development"><em>PISA</em> development</a></li>
+                </ul>
+            </nav>
+
+            <article id="introduction">
+                <h1>What is <em>PISA</em>?</h1>
+                <p><em>PISA</em> is a batch system for Python scripts, providing a simple method for distributed computation without the need for a complicated cluster configuration.</p>
+                <h2>More details, please!</h2>
+                <p>Do you have a Python script that needs to perform a specific task multiple times with slight variations on each run, and you wish you could run all of them simultaneously? Do you want to analyze multiple files using the same method? Do you have heavy computational tasks that are independent from each other but each requires a long time to process? If setting up a computing cluster sounds daunting and you want to run your Python program at decent speed, <em>PISA</em> is the tool you are looking for!</p>
+                <h2>But I don't have two dozen computers at home to build my own cluster.</h2>
+                <p>Don't worry, you are not alone with this problem. The computer pool from the physics faculty at KIT consists of 34 PCs, and <em>PISA</em> was developed to distribute computational jobs among them. It uses SSH access to distribute jobs, and user home directories are synchronized through a network drive, eliminating the need to manually synchronize files within the network. With a cluster configuration, file provided on this website for the computing pool, <em>PISA</em> can be used to combine any set of homogeneous computers with SSH access and operate as a batch system on this composition. The <em>PISA</em> application takes on the responsibility of distributing the workload among the available devices, restarting tasks if a remote machine fails to respond, and collecting the output of all jobs.</p>
+                <h2>Which rules do I have to follow when I want to use the computers?</h2>
+                <p>When you registered for an account, you agreed to the computing rules, which can be <a href="https://comp.physik.kit.edu/Account/Benutzerordnung.html" target="_blank">found here</a>. These rules allow to cluster the computers, provided it is for purposes related to your studies. Illegal activities, such as mining for cryptocurrencies or downloading copyrighted media, will be detected and the responsible user will be held accountable. If you have any concerns, you can always ask the administrator or the "poolraum-hiwi" for advice.</p>
+                <p>Furthermore, we ask you to be considerate of other users. The computers are also used for tutorials and practical courses, which cannot take place if they are overloaded. Therefore, we request that you limit resource allocation by running a limited number of jobs on each computer simultaneously, ensuring that no single person monopolizes the computers. If you require more computational power, you can perform your tasks with higher resource allocation overnight when no users are present, but make sure everything is completed by morning. If this is still insufficient, you might need to consider other platforms to run your code, or perhaps revisit the idea of building your own cluster.</p>
+                <h2>What kind of jobs are suitable for a batch system?</h2>
+<p>A batch system is designed for running programs on other devices independently from each other. If your program needs to be executed only a single time, has a long runtime, and cannot be divided into individual tasks, then <em>PISA</em> cannot assist you. Design your Python script so that specific conditions, varying between each run, can be passed as command-line arguments, as <em>PISA</em> (and batch systems in general) do not support user input during runtime. For an easy way to parse command-line arguments within your script, check out the <a href="https://docs.python.org/3/library/argparse.html">Python argparse module</a>. Additionally, you will achieve higher benefits when your jobs are compute-bound, meaning they spend more time performing computational work rather than waiting for input/output operations on files, network interfaces, or memory access. <em>PISA</em> is designed to create a high-throughput system; for high-performance systems, there are other requirements.</p>
+            </article>
+
+            <article id="prerequsites">
+                <h1>Prerequisites</h1>
+                <p>Before you can use <em>PISA</em>, you need to have a few things set up.</p>
+
+                <h2>SSH</h2>
+                <p>To use <em>PISA</em>, you first need to configure SSH access between all devices to authenticate with a key file. Without this configuration, each submitted job would require a human to type in the login password to establish the connection. With a trusted SSH key configured, the authentication process replaces the password prompt with the key file. For more information about establishing an SSH connection, please refer to the <a href="https://spice-space.de/inhalt/physik-pool/">Instructions for using SSH for the physics computer pool</a>. Once you understand how to establish an SSH connection, you need to set up <a href="https://spice-space.de/inhalt/physik-pool/#key-login">passwordless login to remote devices via the SSH key</a>. If you are unsure how to proceed, it is highly recommended to use the <code>enable_ssh_key_pool.sh</code> script.</p>
+
+                <h2>Virtual Environment</h2>
+                <p>Your Python environment needs to be consistent across all devices where your scripts are run to ensure that all required Python packages are available. <em>PISA</em> relies on <a href="https://docs.python.org/3/library/venv.html">Python virtual environments</a> (venv) to provide a uniform operational basis for all tasks executed remotely. If you are unfamiliar with virtual environments, it is highly recommended to become familiar with them. In this setup, your virtual environment is tied to the source code of your project. Assuming your Python source files are located in a directory, open a shell in that directory and run:</p>
+                <p class="codeblock shellcode"><code>python -m venv venv/</code></p>
+                <p>This command creates a virtual environment. You will notice a new directory named "venv" (the last argument is the directory). To activate the virtual environment, run:</p>
+                <p class="codeblock shellcode"><code>source ./venv/bin/activate</code></p>
+                <p>from the same directory where the venv was created. To deactivate a virtual environment, simply call <code>deactivate</code> in the shell. Within this venv, you can now install Python packages using <code>pip install ...</code>, and the packages will only be available inside the venv, with no impact on globally installed packages.</p>
+                <p>Even if your Python code has no dependencies, <em>PISA</em> still requires you to specify a virtual environment, even if it may not seem necessary.</p>
+            </article>
+
+            <article id="howto">
+                <h1>How to use <em>PISA</em>?</h1>
+                <h2>Step 1: Preparation</h2>
+                <p>Before you start using <em>PISA</em>, make sure that the prerequisites are fulfilled: you should be able to establish an SSH connection to all the computers in the pool without having to type in a password, and your project should contain a virtual environment. To install <em>PISA</em> on your system, simply use:</p>
+                <p class="codeblock shellcode"><code>pip install pisa-ssh</code></p>
+                <p>You can install <em>PISA</em> globally or within your project-specific venv; it just needs to be callable.</p>
+
+                <h2>Step 2: Cluster configuration</h2>
+                <p><em>PISA</em> needs to know which computers it can connect to. The set of available machines is specified in a cluster configuration file when <em>PISA</em> is executed. There is a <a href="https://github.com/MitchiLaser/pisa/blob/main/config/fphct_cluster.json">predefined configuration</a> file for the computer pool at the physics faculty at KIT that can be downloaded from the command line:</p>
+                <p class="codeblock shellcode"><code>wget https://raw.githubusercontent.com/MitchiLaser/pisa/main/config/fphct_cluster.json</code></p>
+
+                <h2>Step 3: Job description file</h2>
+                <p>In this final step, you need to tell <em>PISA</em> which jobs to execute. Typically, you want your script to be called with some command line arguments that vary for each run. Imagine you want to execute <code>python myscript.py -l &lt;number&gt;</code>, with the parameter <code>l</code> being a number. You want the number to be 1 on the first run, 2 on the second run, and so on, until it finally reaches 10 for the last run. In this case, you need to provide <em>PISA</em> with the following information:</p>
+                <ul>
+                    <li>Which virtual environment should be used to execute the script.</li>
+                    <li>Which script should be executed.</li>
+                    <li>Where the output of the programs should be stored.</li>
+                    <li>Any command line arguments that are the same for each run.</li>
+                    <li>Any command line arguments that vary for each run and the values that should be passed to the program.</li>
+                </ul>
+                <p>The output of all jobs is stored in files, and the assignment of each run to its corresponding command line arguments is stored in an assignment file, generated while <em>PISA</em> is running. To provide <em>PISA</em> with the necessary information, a job description file is passed to <em>PISA</em> when it is executed. An <a href="https://github.com/MitchiLaser/pisa/blob/main/config/example_task.toml">example job description file</a> for a simple <a href="https://github.com/MitchiLaser/pisa/blob/main/config/fib.py">example program</a> (a Fibonacci number calculator with poor runtime) is provided. This file needs to be adjusted for each batch of jobs that <em>PISA</em> should process.</p>
+                <p>To simplify the structure of the job description file, all file locations are specified relative to a working directory. <em>PISA</em> can handle any number of variable arguments for each run.</p>
+
+                <h2>Step 4: Submit your jobs</h2>
+                <p>Now that the prerequisites are met, the cluster configuration file is downloaded, and the job description file for the batch of tasks is prepared, you can start the distributed parallel processing of the jobs. To do so, run <em>PISA</em> using the following command:</p>
+                <p class="codeblock shellcode"><code>pisa -c fphct_cluster.json -t &lt;your_task_file.toml&gt;</code></p>
+                <p><em>PISA</em> will start running the jobs on the other machines. It stops when all jobs are finished. You will notice that the directory for the output files and the assignment file are created, allowing you to collect the results from your jobs. Additionally, you can add the <code>-l</code> parameter when running <em>PISA</em> to enable detailed output of the currently performed actions, or <code>-d</code> if you accidentally lost the assignment file and want to recreate it without having to run all jobs again. For more information, check out:</p>
+                <p class="codeblock shellcode"><code>pisa --help</code></p>
+            </article>
+
+            <article id="example">
+                <h1>Example program</h1>
+                <p>The <a href="https://github.com/MitchiLaser/pisa/tree/main/config">GitHub repository</a> contains a directory with an example program, the corresponding task description file, and the cluster configuration file for the fphct computing pool. Check out these files to familiarize yourself with the use of <em>PISA</em>. To run the example, a virtual environment needs to be created, and the file locations should match the ones in the task description file.</p>
+                </article>
+
+            <article id="development">
+                <h1><em>PISA</em> development</h1>
+                <p><em>PISA</em> is an open-source project. If you encounter any issues with <em>PISA</em> or have feature requests, you can <a href="https://github.com/MitchiLaser/pisa/issues">submit an issue</a> or implement the solution yourself and make a <a href="https://github.com/MitchiLaser/pisa/pulls">pull request</a>.</p>
+            </article>
+
+        </main>
+        <footer>
+            <p><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a>&nbsp;<a href="https://www.spice-space.de/navigation/ueber-michi/">Michael Hohenstein</a>, 2024</p>
+            <p><a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">Privacy</a></p>
+        </footer>
+    </body>
+</html>
