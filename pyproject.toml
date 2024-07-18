@@ -49,7 +49,7 @@ dev = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/MitchiLaser/pisa/blob/main/docs/README.md" # TODO: Maybe provide github pages build and HTML page
+"Homepage" = "https://mitchilaser.github.io/pisa/"
 "Repository" = "https://github.com/MitchiLaser/pisa"
 
 [project.scripts]
