@@ -36,9 +36,22 @@ enum = enumerator()
 
 
 class running_var:
-    def __init__(self, arg_name: str, start: int, end: int, step: int):
-        self.arg_name = arg_name
-        self.values = list(range(start, end + step, step))  # inclusive upper bound
+    def __init__(self, var_argument: dict):
+        # check if the necessary keys are present
+        if 'arg' not in var_argument:
+            log.error("Missing 'arg' field in variable argument")
+            sys.exit(1)
+        self.arg_name = var_argument['arg']
+        # check type and perform the corresponding parsing
+        match var_argument['type']:  # TODO: Implement more types
+            case 'numeric':
+                if not all(k in var_argument for k in ('start', 'end', 'step')):
+                    log.error(f"Missing keys in numeric variable argument {self.arg_name}")
+                    sys.exit(1)
+                self.values = list(range(var_argument['start'], var_argument['end'] + var_argument['step'], var_argument['step']))  # inclusive upper bound
+            case _:
+                log.error(f"Cannot parse argument of type: {var_argument['type']}")
+                sys.exit(1)
 
     def __repr__(self):  # only for debugging purposes but currently nowhere in use
         return f"{self.arg_name} = {self.values}"
@@ -94,9 +107,10 @@ def parse_file(config_file: str) -> queue.Queue[task]:
                 tasks := queue.Queue(),
                 config,
                 [
-                    running_var(i['arg'], i['start'], i['end'], i['step']) for i in config['var_arguments']
-                ],  # the list of running variables
-                config['fix_arguments'],  # start with fixed arguments
+                    # walk through the list of running variables
+                    running_var(i) for i in config['var_arguments']
+                ],
+                config['fix_arguments'],  # fixed arguments
                 assignto
             )
     except Exception as e:
