@@ -34,16 +34,7 @@ dynamic = ["version"]
 version = {attr = "pisa.__version__"}
 
 [project.optional-dependencies]
-# TODO: Update???
 dev = [
-    #"coverage",
-    #"sphinx",
-    #"sphinx-rtd-theme",
-    #"mock",
-    #"pytest",
-    #"flake8",
-    #"black",
-    #"isort",
     "build",
     "twine", 
 ]
@@ -54,21 +45,6 @@ dev = [
 
 [project.scripts]
 pisa = "pisa.__main__:main"
-
-########## TODO ???? ##############
-
-#[tool.pytest.ini_options]
-#testpaths = "kafe2/test"
-#python_files = "test*.py"
-
-#[tool.coverage.run]
-#source = [
-	#"kafe2",
-#]
-#omit = [
-	#"kafe2/test/*",
-#]
-#command_line= '-m unittest discover -v -s kafe2/test -p "*.py"'
 
 [tool.black]
 line-length = 150
