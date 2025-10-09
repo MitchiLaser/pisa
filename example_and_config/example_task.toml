@@ -5,6 +5,6 @@ assign = "assignments.csv"                              # file containing the as
 executable = "python fib.py"                            # executable file relative to working directory
 fix_arguments = ""                                      # Arguments which are always the same for every run
 var_arguments = [                                       # list of arguments which are varied for every run
-        {"arg"="-n", "start"=0, "end"=41, "step"=1},    # arg -> command line argument, start and end -> range of values, step -> step size
+        {"arg"="-n", "start"=0, "end"=40, "step"=1},    # arg -> command line argument, start and end -> range of values (inclusive upper bound) , step -> step size
         #{"arg"="-p", "start"=0, "end"=10, "step"=1},    # just as an example
 ]

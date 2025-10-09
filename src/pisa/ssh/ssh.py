@@ -4,7 +4,6 @@ import os
 import subprocess
 
 
-
 class Session:
     def __init__(self, host):
         self.host = host

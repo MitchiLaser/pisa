@@ -38,7 +38,7 @@ enum = enumerator()
 class running_var:
     def __init__(self, arg_name: str, start: int, end: int, step: int):
         self.arg_name = arg_name
-        self.values = list(range(start, end, step))
+        self.values = list(range(start, end + step, step))  # inclusive upper bound
 
     def __repr__(self):  # only for debugging purposes but currently nowhere in use
         return f"{self.arg_name} = {self.values}"
@@ -47,7 +47,6 @@ class running_var:
 def fill_queue(task_queue: queue.Queue, config: dict, add_args: list[running_var], current_args: str, assignto: typing.TextIO):
     # abort recursion because all vars have been added
     if len(add_args) == 0:
-        global enum
         num = enum.next()
         task_queue.put(task(
             num=num,

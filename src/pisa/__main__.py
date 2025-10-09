@@ -28,7 +28,6 @@ def main():
     # set up log
     log.basicConfig(
         level=log.DEBUG if args.log else log.WARNING,
-        # format="%(acsctime)s - %(levelname)s - %(message)s",
         format='%(asctime)s %(levelname)-8s %(message)s',
         datefmt="%Y-%m-%d %H:%M:%S"
     )

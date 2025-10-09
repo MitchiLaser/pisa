@@ -6,7 +6,11 @@
 		"fphct01",
 		"fphct02",
 		"fphct03",
-		"fphct04",
+		{
+			"device": "fphct04",
+			"num_tasks": 1,
+			"comment": "SSH entry, use with caution"
+		},
 		"fphct05",
 		"fphct06",
 		"fphct07",

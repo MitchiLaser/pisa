@@ -8,9 +8,21 @@ import sys
 class cluster_conf:
 
     class node_conf:
-        def __init__(self, address: str, task_limit: int):
-            self.address = address
-            self.task_limit = task_limit
+        def __init__(self, device: str | dict, global_task_limit: int):
+            # parse address first
+            if isinstance(device, str):
+                self.address = device
+            elif isinstance(device, dict):
+                if 'device' not in device:
+                    log.error(f"Missing 'device' field in configuration for device {device}")
+                    sys.exit(1)
+                self.address = device['device']
+            else:
+                log.error("Invalid device entry in cluster configuration")
+                sys.exit(1)
+            # task limit is an optional parameter, if not present revert back to global task limit
+            self.task_limit = global_task_limit if not ('num_tasks' in device) else device['num_tasks']
+            log.debug(f"Node {self.address} with task limit {self.task_limit} initialized")
 
         def get_address(self) -> str:
             return self.address
@@ -23,7 +35,10 @@ class cluster_conf:
         if 'all' not in config:
             log.error("Missing 'all' object in cluster configuration")
             sys.exit(1)
-        self.global_param = config['all']  # TODO: Check if the 'num_tasks' is also set -> list of necessary arguments in the config file
+        self.global_param = config['all']
+        if ('num_tasks' not in self.global_param) or (not isinstance(self.global_param['num_tasks'], int)) or (self.global_param['num_tasks'] < 1):
+            log.error("Missing or invalid global task limit in cluster configuration")
+            sys.exit(1)
 
         # copy the list of nodes
         if ('devices' not in config) or (len(config['devices']) == 0):
