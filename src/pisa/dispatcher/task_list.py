@@ -74,7 +74,7 @@ def fill_queue(task_queue: queue.Queue, config: dict, add_args: list[running_var
         assignto.write(f"{num}, {config['executable']} {current_args}\n")
         return
     else:
-        # add all values of the fist var in the lost and then call the function recursively for all remaining lists
+        # add all values of the fist var in the list and then call the function recursively for all remaining lists
         for i in add_args[0].values:
             fill_queue(task_queue, config, add_args[1:], f"{current_args} {add_args[0].arg_name} {i}", assignto)
 
