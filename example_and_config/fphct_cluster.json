@@ -9,7 +9,7 @@
 		{
 			"device": "fphct04",
 			"num_tasks": 1,
-			"comment": "SSH entry, use with caution"
+			"comment": "prevent SSH entry from overload"
 		},
 		"fphct05",
 		"fphct06",

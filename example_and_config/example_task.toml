@@ -1,10 +1,32 @@
-woking_directory = "~"                                  # working directory of the running process
-environment = "venv"                                    # activate virtual environment relative to working directory
-output = "fib_run"                                       # redirect stdout and stderr of all processes into files, relative to working directory
-assign = "assignments.csv"                              # file containing the assignments for the runs with their numbers
-executable = "python fib.py"                            # executable file relative to working directory
-fix_arguments = ""                                      # Arguments which are always the same for every run
-var_arguments = [                                       # list of arguments which are varied for every run
-        {"arg"="-n", "start"=0, "end"=40, "step"=1},    # arg -> command line argument, start and end -> range of values (inclusive upper bound) , step -> step size
-        #{"arg"="-p", "start"=0, "end"=10, "step"=1},    # just as an example
+# specify a working directory. All other paths are relative to this directory
+woking_directory = "~"
+
+# Define a virtual environment which should be activated upon the start of the task
+environment = "venv"
+
+# Location of the output of each task. The output which is regularly
+# printed to stdout and stderr will be redirected to files in this directory
+output = "fib_run"
+
+# Create an assignment file, which assigns a unique number to each run.
+# This is important to map the output in the 'output' directory to the
+# parameters used for the run.
+assign = "assignments.csv"
+
+# Define the executable and its arguments
+# The executable is a file relative to the working directory
+executable = "python fib.py"
+
+# Fixed arguments are always the same for every run
+fix_arguments = ""
+
+# Varied arguments are changed for every run
+# There can include man options
+var_arguments = [
+        # First example, a numeric type argument: varying a single integer argument from 0 to 40
+        # the argument is specified by its command line flag, here "-n"
+        # The range is specified by start, end and step size. The range is inclusive of the end value.
+        {"arg"="-n", "type"="numeric", "start"=0, "end"=40, "step"=1},
+
+        #{"arg"="-p", "type"="numeric", "start"=0, "end"=10, "step"=1},    # just as an example
 ]
