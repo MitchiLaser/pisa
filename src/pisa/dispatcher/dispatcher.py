@@ -37,22 +37,21 @@ def node_connection(node: cluster_conf.cluster_conf.node_conf, tasks: queue.Queu
                 f"mkdir -p {task.err}",
                 f"nice -n 19 {task.cmd} >{task.out}/{task.num}.out 2>{task.err}/{task.num}.err"
             ]).close()
-            # log.debug(f"{task.cmd} >{task.out}/{task.num}.out 2>{task.err}/{task.num}.err &")  # TODO: remove
         except queue.Empty:  # queue is empty: exit thread
             has_task = False
             break
-        except FileNotFoundError as e:  # file not found: program is not available
+        except FileNotFoundError as e:  # file not found: ssh is not installed
             log.error(f"file not found: {e}")
             tasks.put(task)  # reinsert task back into the queue
             break
         except subprocess.CalledProcessError as e:  # return code does not equal zero
-            log.error(f"error while executing command: {e}")
             if e.returncode == 255:  # return code 255 can only be returned by ssh
                 log.error(f"Assuming that the node ({node.get_address()}) is not reachable. Ending thread.")
                 tasks.put(task)  # reinsert task back into the queue
                 break
             else:
                 log.error(f"Executing command {task.num} failed: {task.cmd}")
+                log.error(f"error while executing command: {e}")
         else:
             log.debug(f"Task {task.num} finished on node {node.get_address()}: {task.cmd}")
         finally:

@@ -29,8 +29,11 @@ class Session:
 
     def send_command(self, command):
         self._check_connected()
-        self.ssh_process.stdin.write(f"{command}\n".encode('utf-8'))
-        self.ssh_process.stdin.flush()
+        try:
+            self.ssh_process.stdin.write(f"{command}\n".encode('utf-8'))
+            self.ssh_process.stdin.flush()
+        except BrokenPipeError:
+            pass
         return self  # monadic return
 
     def send_command_list(self, cmd_list: list):
@@ -43,16 +46,28 @@ class Session:
 
     def read_stdout(self):
         self._check_connected()
-        return self.ssh_process.stdout.read1().decode('utf-8')
+        read = self.ssh_process.stdout.read()
+        if read is not None:
+            return read.decode('utf-8')
 
     def read_stderr(self):
         self._check_connected()
-        return self.ssh_process.stderr.read1().decode('utf-8')
+        read = self.ssh_process.stderr.read()
+        if read is not None:
+            return read.decode('utf-8')
 
     def wait_for_exit(self):
         self._check_connected()
         self.ssh_process.wait()
-        return self  # monadic return
+        returncode = self.ssh_process.returncode
+        if returncode != 0:
+            raise subprocess.CalledProcessError(
+                returncode=returncode,
+                cmd=["ssh", self.host],
+                output=self.read_stdout(),
+                stderr=self.read_stderr(),
+            )
+        return self
 
     def close(self):
         if self.ssh_process is not None:
@@ -64,4 +79,10 @@ class Session:
             self.wait_for_exit()
 
     def __del__(self):
-        self.close()
+        # Since 2025 Python calls __del__ outside the try ... except ... block
+        # Therefore when __del__ throws an exception, it won't get caught.
+        # Therefore, __del__ cannot throw an error!
+        try:
+            self.close()
+        except Exception:
+            pass

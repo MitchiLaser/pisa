@@ -28,7 +28,7 @@ class enumerator:
     def next(self) -> int:
         old_value = self.value
         self.value += 1
-        return old_value
+        return f"{old_value:04d}"
 
 
 # global enumerator object which is needed by the recursive fill_queue function
